@@ -1,1 +1,0 @@
-web: php artisan migrate --force && php artisan db:seed --force --class=ArticleSeeder && php -d variables_order=EGPCS /cnb/lifecycle/launcher
