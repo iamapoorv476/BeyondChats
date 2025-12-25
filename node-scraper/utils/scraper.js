@@ -54,7 +54,7 @@ async function scrapeArticleCheerio(url){
         return {
             url,
             title,
-            content: content.substring(0, 10000), // Limit to 10k chars
+            content: content.substring(0, 10000), 
             method: 'cheerio'
         };
 
@@ -81,19 +81,12 @@ async function scrapeArticleCheerio(url){
             waitUntil: 'networkidle2',
             timeout: parseInt(process.env.TIMEOUT) || 30000
         });
-
-        // Extract content using JavaScript in the browser
         const data = await page.evaluate(() => {
-            // Remove unwanted elements
             const unwanted = document.querySelectorAll('script, style, nav, header, footer, aside, .advertisement, .ads');
             unwanted.forEach(el => el.remove());
-
-            // Get title
             const title = document.querySelector('h1')?.textContent?.trim() ||
                          document.querySelector('meta[property="og:title"]')?.content ||
                          document.title;
-
-            // Get main content
             const selectors = [
                 'article',
                 '[role="article"]',
@@ -114,7 +107,6 @@ async function scrapeArticleCheerio(url){
                 }
             }
 
-            // Fallback to all paragraphs
             if (!content || content.length < 200) {
                 const paragraphs = Array.from(document.querySelectorAll('p'));
                 content = paragraphs.map(p => p.textContent.trim()).join('\n\n');
